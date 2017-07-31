@@ -20,3 +20,23 @@ class UASConfig(object):
         except IOError as e:
             print 'Error {0} reading config file: {1}: '.format(e.errno, e.strerror)
         return
+
+    def save(self):
+        try:
+            with open(self.config_file, 'wb') as configfile:
+                self.parser.write(configfile)
+                except IOError as e:
+                print 'Error {0} writing config file: {1}: '.format(e.errno, e.strerror)
+                return
+
+    def get_integer(self, section, option, default):
+        try:
+            return self.parser.getint(section, option)
+        except ConfigParser.Error:
+            return default
+
+    def get_string(self, section, option, default):
+            try:
+                return self.parser.get(section, option)
+            except ConfigParser.Error:
+                return default
