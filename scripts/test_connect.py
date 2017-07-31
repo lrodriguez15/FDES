@@ -10,7 +10,7 @@ class UAS(object):
 
     def get_vehicle(self):
         print "connecting to vehicle.."
-        return connect('/dev/ttyUSB0', wait_ready=True, baud=921600)
+        return connect('/dev/ttyUSB0', wait_ready=True, baud=57600)
 
     def initialize_vehicle(self):
         if self.vehicle is None:
