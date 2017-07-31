@@ -1,4 +1,4 @@
-from dronekit import connect #, VehicleMode, LocationGlobal, GPSInfo, Vehicle, MAVConnection
+from dronekit import connect, VehicleMode #, LocationGlobal, GPSInfo, Vehicle, MAVConnection
 import time
 
 class UAS(object):
@@ -15,6 +15,23 @@ class UAS(object):
             self.vehicle = self.get_vehicle()
             return True;
 
+    def arm_vehicle(self):
+        print "Basic pre-arm checks"
+        # Don't try to arm until autopilot is ready
+        while not self.vehicle.is_armable:
+            print " Waiting for vehicle to initialise..."
+            time.sleep(1)
+
+        print "Arming motors"
+        # Copter should arm in GUIDED mode
+        self.vehicle.mode = VehicleMode("AUTO")
+        self.vehicle.armed = True
+
+        # Confirm vehicle armed before attempting to take off
+        while not self.vehicle.armed:
+            print " Waiting for arming..."
+            time.sleep(1)
+
     def run(self):
         while True:
             if self.initialize is False:
@@ -24,7 +41,12 @@ class UAS(object):
                 print "System status: %s" % self.vehicle.system_status.state
                 print "Mode: %s" % self.vehicle.mode.name  # settable
                 print "Armed: %s" % self.vehicle.armed  # settable
-            time.sleep(0.05)
+                self.arm_vehicle()
+            time.sleep(1)
+            print "Vehicle OK"
+
+
+
 
 uas = UAS()
 uas.run()
